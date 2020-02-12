@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Got solution help from https://github.com/mlafeldt/google-python-class/blob/master/basic/solution/mimic.py
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
@@ -67,7 +68,19 @@ def create_mimic_dict(filename):
                 "who" : ["knows"]
             }
     """
-    # +++your code here+++
+    mimic_dict = {}
+    f = open(filename, 'r')
+    text = f.read()
+    f.close()
+    words = text.split()
+    prev = ''
+    for word in words:
+        if not prev in mimic_dict:
+            mimic_dict[prev] = [word]
+        else:
+            mimic_dict[prev].append(word)
+        prev = word
+    return mimic_dict
 
 
 def print_mimic(mimic_dict, start_word):
@@ -77,8 +90,12 @@ def print_mimic(mimic_dict, start_word):
         - Randomly select a new word from the next-list
         - Repeat this process 200 times
     """
-    # +++your code here+++
-    pass
+    for unused_i in range(200):
+        print start_word,
+        nexts = mimic_dict.get(start_word)
+        if not nexts:
+            nexts = mimic_dict['']
+        start_word = random.choice(nexts)
 
 
 # Provided main(), calls mimic_dict() and mimic()
@@ -87,8 +104,8 @@ def main():
         print 'usage: python mimic.py file-to-read'
         sys.exit(1)
 
-    d = create_mimic_dict(sys.argv[1])
-    print_mimic(d, '')
+    dict = create_mimic_dict(sys.argv[1])
+    print_mimic(dict, '')
 
 
 if __name__ == '__main__':
